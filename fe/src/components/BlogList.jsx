@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { blog_data, blogCategories } from "../assets/assets";
-import BlogCards from "./BlogCards"; // ✅ make sure this exists
+import BlogCards from "./BlogCards"; 
 
 const BlogList = () => {
   const [menu, setMenu] = useState("All");
@@ -15,7 +15,7 @@ const BlogList = () => {
           <motion.button
             key={item}
             onClick={() => setMenu(item)}
-            layout // ✅ fixed here
+            layout
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
             whileTap={{ scale: 0.95 }}
             className={`cursor-pointer px-10 py-3 rounded-full font-medium
