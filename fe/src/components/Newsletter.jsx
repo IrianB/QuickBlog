@@ -16,11 +16,11 @@ const Newsletter = () => {
             type="email"
             placeholder="Enter your email"
             required
-            className="flex-1 w-full px-5 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 w-full px-5 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
           <button
             type="submit"
-            className="w-full sm:w-auto bg-blue-600 text-white font-semibold px-6 py-3 rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
+            className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold px-6 py-3 rounded-md hover:opacity-90 transition"
           >
             Subscribe
           </button>
