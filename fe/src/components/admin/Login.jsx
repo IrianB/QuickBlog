@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const Login = () => {
+
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
     const handleSubmit = async (e) => {
         e.preventDefault()
     }
@@ -21,6 +25,7 @@ const Login = () => {
                 <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="relative z-0 w-full mb-6 group">
                         <input
+                            onChange={(e)=> setEmail(e.target.value)} value={email}
                             type="email"
                             name="email"
                             required
@@ -35,6 +40,7 @@ const Login = () => {
 
                     <div className="relative z-0 w-full mb-6 group">
                         <input
+                            onChange={(e)=> setPassword(e.target.value)} value={password}
                             type="password"
                             name="password"
                             required
