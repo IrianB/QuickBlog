@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { blog_data } from '../assets/assets'
+import { blog_data, comments_data, assets } from '../assets/assets'
 import { useParams } from 'react-router-dom'
 import Moment from 'moment'
 import Navbar from '../components/Navbar'
@@ -7,14 +7,20 @@ import Navbar from '../components/Navbar'
 const Blog = () => {
   const { id } = useParams()
   const [data, setData] = useState(null)
+  const [comments, setComments] = useState([])
 
   const fetchData = async () => {
-    const res = blog_data.find(item => item._id === id)
+    const res = blog_data.find((blog) => blog._id === id)
     setData(res)
+  }
+
+  const fetchComments = async () => {
+    setComments(comments_data)
   }
 
   useEffect(() => {
     fetchData()
+    fetchComments()
   }, [])
 
   return data ? (
@@ -32,7 +38,10 @@ const Blog = () => {
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3">
             {data.title}
           </h2>
-          <h4 className="text-lg text-gray-600 mt-2">{data.subTitle}</h4>
+          <h4
+            className="text-lg text-gray-600 mt-2"
+            dangerouslySetInnerHTML={{ __html: data.subTitle }}
+          ></h4>
           <p className="mt-4 text-sm text-gray-500 font-medium">By Jigs Ipong</p>
         </div>
 
@@ -47,12 +56,51 @@ const Blog = () => {
           </div>
         )}
 
-        {/* Blog Description / Content */}
-        <div className="prose max-w-none text-gray-800 leading-relaxed">
+        {/* Blog Content */}
+        <div className="prose max-w-none text-gray-800 leading-relaxed mb-12">
           {data.description ? (
-            <div className='rich-text' dangerouslySetInnerHTML={{ __html: data.description }}></div>
+            <div
+              className="rich-text"
+              dangerouslySetInnerHTML={{ __html: data.description }}
+            ></div>
           ) : (
             <p>No content available for this blog.</p>
+          )}
+        </div>
+
+        {/* Comments Section */}
+        <div className="mt-16 border-t border-gray-200 pt-8">
+          <h3 className="text-2xl font-semibold text-gray-800 mb-6">
+            Comments ({comments.length})
+          </h3>
+
+          {comments.length > 0 ? (
+            <div className="space-y-6">
+              {comments.map((item, index) => (
+                <div
+                  key={index}
+                  className="bg-white p-5 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200"
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <img
+                      src={assets.user_icon}
+                      alt={item.name}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <div>
+                      <p className="text-gray-900 font-medium">{item.name}</p>
+                      <p className="text-xs text-gray-500">
+                        {Moment(item.createdAt).fromNow()}
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-700 leading-relaxed">{item.content}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500">No comments yet. Be the first to comment!</p>
           )}
         </div>
       </div>

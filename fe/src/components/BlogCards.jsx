@@ -14,7 +14,7 @@ const BlogCards = ({blog}) => {
       <span className='text-sm font-medium text-purple-500'>{category}</span>
       <div>
         <h5 className='text-lg font-semibold text-gray-800'>{title}</h5>
-        <p className='text-gray-600 text-sm'>{description.slice(0, 80)}...</p>
+        <p className='text-gray-600 text-sm' dangerouslySetInnerHTML={{ __html: description.slice(0, 80) + '...' }}></p>
       </div>
     </div>
   )
