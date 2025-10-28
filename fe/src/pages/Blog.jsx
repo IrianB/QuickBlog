@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import Moment from 'moment'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import Loader from '../components/Loader'
 
 const Blog = () => {
   const { id } = useParams()
@@ -179,9 +180,9 @@ const Blog = () => {
       <Footer />
     </div>
   ) : (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <p className="text-gray-500 text-lg animate-pulse">Loading...</p>
-    </div>
+  
+      <Loader />
+    
   )
 }
 
