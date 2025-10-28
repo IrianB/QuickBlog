@@ -36,11 +36,16 @@ const Layout = () => {
                 </button>
             </header>
 
-            <div>
+            <div className="flex flex-1">
+                {/* Sidebar on the left */}
                 <Sidebar />
-                <Outlet />
+
+                {/* Main content */}
+                <main className="flex-1 p-6">
+                    <Outlet />
+                </main>
             </div>
-           
+
         </div>
     )
 }

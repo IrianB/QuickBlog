@@ -8,13 +8,14 @@ import ListBlog from './pages/admin/ListBlog'
 import AddBlog from './pages/admin/AddBlog'
 import Comments from './pages/admin/Comments'
 import Login from './components/admin/Login'
+import BlogTableItem from './components/admin/BlogTableItem'
 
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/blog/:id" element={<Blog />} />
-      <Route path='/admin' element={false ? <Layout /> : <Login/>}>
+      <Route path='/admin' element={true ? <Layout /> : <Login/>}>
         <Route index element={<Dashboard />} />
         <Route path='list' element={<ListBlog />} />
         <Route path='add' element={<AddBlog />} />
