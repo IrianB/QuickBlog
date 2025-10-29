@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { comments_data } from '../../assets/assets'
+import CommentTableItem from '../../components/admin/CommentTableItem'
 
 const Comments = () => {
   const [comments, setComments] = useState([])
@@ -13,8 +14,10 @@ const Comments = () => {
     fetchComments()
   }, [])
 
-  const filteredComments = comments.filter(
-    (comment) => comment.status === filter
+  const filteredComments = comments.filter((comment) =>
+    filter === 'Approved'
+      ? comment.isApproved === true
+      : comment.isApproved === false
   )
 
   return (
@@ -27,55 +30,62 @@ const Comments = () => {
         <div className="flex gap-3 mt-4 sm:mt-0">
           <button
             onClick={() => setFilter('Approved')}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
-              filter === 'Approved'
-                ? 'bg-blue-500 text-white shadow-md'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+            className={`cursor-pointer px-4 py-2 rounded-lg font-medium transition ${filter === 'Approved'
+              ? 'bg-blue-500 text-white shadow-md'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
           >
             Approved
           </button>
           <button
             onClick={() => setFilter('Not Approved')}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
-              filter === 'Not Approved'
-                ? 'bg-blue-500 text-white shadow-md'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+            className={`cursor-pointer px-4 py-2 rounded-lg font-medium transition ${filter === 'Not Approved'
+              ? 'bg-blue-500 text-white shadow-md'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
           >
             Not Approved
           </button>
         </div>
       </div>
 
-      {/* Comments List */}
-      <div className="max-h-[400px] overflow-y-auto border-t border-gray-200">
-        {filteredComments.length > 0 ? (
-          filteredComments.map((comment, index) => (
-            <div
-              key={index}
-              className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 px-2 border-b border-gray-100 hover:bg-gray-50 transition"
-            >
-              <div>
-                <p className="text-gray-800 font-medium">{comment.user}</p>
-                <p className="text-gray-600 text-sm mt-1">{comment.text}</p>
-              </div>
-              <span
-                className={`mt-2 sm:mt-0 px-3 py-1 rounded-full text-sm ${
-                  comment.status === 'Approved'
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-yellow-100 text-yellow-700'
-                }`}
-              >
-                {comment.status}
-              </span>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500 text-center py-6">
-            No comments found for this filter.
-          </p>
-        )}
+      {/* Comments Table */}
+      <div className="overflow-x-auto max-h-[450px] overflow-y-auto border border-gray-200 rounded-lg">
+        <table className="min-w-full bg-white">
+          <thead className="bg-gray-100 sticky top-0 z-10">
+            <tr>
+              <th className="py-3 px-6 text-left text-gray-600 font-medium">
+                Blog Title & Comment
+              </th>
+              <th className="py-3 px-6 text-center text-gray-600 font-medium">
+                Date
+              </th>
+              <th className="py-3 px-6 text-center text-gray-600 font-medium">
+                Status
+              </th>
+              <th className="py-3 px-6 text-center text-gray-600 font-medium">
+                Action
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {filteredComments.length > 0 ? (
+              filteredComments.map((comment, index) => (
+                <CommentTableItem key={index} comment={comment} index={index} />
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="4"
+                  className="text-center text-gray-500 py-6 italic"
+                >
+                  No comments found for this filter.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   )
