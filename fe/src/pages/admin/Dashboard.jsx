@@ -69,16 +69,16 @@ const Dashboard = () => {
             <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="py-3 px-6 text-left text-gray-600 font-medium">#</th>
-                  <th className="py-3 px-6 text-left text-gray-600 font-medium">Blog Title</th>
-                  <th className="py-3 px-6 text-left text-gray-600 font-medium">Date</th>
-                  <th className="py-3 px-6 text-left text-gray-600 font-medium">Status</th>
-                  <th className="py-3 px-6 text-left text-gray-600 font-medium">Actions</th>
+                  <th className="py-4 px-6 text-center text-gray-600 font-medium">#</th>
+                  <th className="py-4 px-6 text-left text-gray-600 font-medium">Blog Title</th>
+                  <th className="py-4 px-6 text-center text-gray-600 font-medium">Date</th>
+                  <th className="py-4 px-6 text-center text-gray-600 font-medium">Status</th>
+                  <th className="py-4 px-6 text-center text-gray-600 font-medium">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {dashboardData.recentBlogs.map((blog, index)=> {
-                  return <BlogTableItem key={blog._id} blog={blog} fetchBlog={fetchData} index={index}/>
+                {dashboardData.recentBlogs.map((blog, index) => {
+                  return <BlogTableItem key={blog._id} blog={blog} fetchBlog={fetchData} index={index} />
                 })}
               </tbody>
             </table>
@@ -88,7 +88,7 @@ const Dashboard = () => {
       )}
 
     </div>
-  ) 
+  )
 }
 
 export default Dashboard
