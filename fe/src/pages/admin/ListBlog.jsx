@@ -22,7 +22,7 @@ const ListBlog = () => {
       </h1>
 
       <div className="overflow-x-auto mt-8">
-        <div className="max-h-[400px] overflow-y-auto rounded-lg shadow-md">
+        <div className="max-h-[500px] overflow-y-auto rounded-lg shadow-md">
           <table className="min-w-full bg-white">
             <thead className="bg-gray-100 sticky top-0 z-10">
               <tr>
