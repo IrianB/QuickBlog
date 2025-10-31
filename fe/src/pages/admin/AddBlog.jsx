@@ -6,33 +6,33 @@ import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
 
 const AddBlog = () => {
+  const { axios, fetchBlogs } = useAppContext()
 
-  const { axios } = useAppContext()
-  const [isAdding, setisAdding] = useState(false)
+  const [isAdding, setisAdding] = useState(false);
 
   const editorRef = useRef(null);
   const quillRef = useRef(null);
 
-  const [image, setImage] = useState(false);
+  const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
   const [subTitle, setsubTitle] = useState("");
   const [category, setCategory] = useState("Select Category");
   const [publish, setPublish] = useState(false);
 
+  // Optional: AI content generator placeholder
   const generateContent = async () => {
-    // Future AI integration
+    toast("AI content generation coming soon!");
   };
 
-  const handlePublish = () => {
-    setPublish(true);
-    toast.success("Blog will be published on submission");
+  const handlePublish = (checked) => {
+    setPublish(checked);
+    if (checked) toast.success("Blog will be published on submission");
   };
 
   const submitHandler = async (e) => {
-
+    e.preventDefault();
     try {
-      e.preventDefault();
-      setisAdding(true)
+      setisAdding(true);
 
       const blog = {
         title,
@@ -42,28 +42,36 @@ const AddBlog = () => {
         isPublished: publish,
       };
 
-      const formData = new FormData()
-      formData.append('blog', JSON.stringify(blog))
-      formData.append('image', image)
+      const formData = new FormData();
+      formData.append("blog", JSON.stringify(blog));
+      formData.append("image", image);
 
-      const { data } = await axios.post('/api/blog/add', formData)
+      const { data } = await axios.post("/api/blog/add", formData);
 
       if (data.success) {
-        toast.success(data.message)
-        setImage(false)
-        setTitle('')
-        quillRef.current.root.innerHTML = ''
-        setCategory('Startup')
+        toast.success(data.message);
+
+        // Reset form
+        setImage(null);
+        setTitle("");
+        setsubTitle("");
+        quillRef.current.root.innerHTML = "";
+        setCategory("Select Category");
+        setPublish(false);
+
+        // 🔄 Refresh blog list automatically
+        fetchBlogs();
       } else {
-        toast.error(data.message)
+        toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     } finally {
-      setisAdding(false)
+      setisAdding(false);
     }
   };
 
+  // Initialize Quill editor
   useEffect(() => {
     if (!quillRef.current && editorRef.current) {
       quillRef.current = new Quill(editorRef.current, { theme: "snow" });
@@ -149,13 +157,11 @@ const AddBlog = () => {
             </button>
           </div>
 
-          {/* Quill Editor Container */}
           <div
             ref={editorRef}
             className="border border-gray-300 rounded-lg min-h-[250px] p-3 bg-white focus-within:ring-2 focus-within:ring-blue-400"
           ></div>
         </div>
-
 
         {/* Blog Category */}
         <div>
@@ -196,7 +202,7 @@ const AddBlog = () => {
           type="submit"
           className="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow transition"
         >
-          {isAdding ? 'Adding...' : 'Add Blog'}
+          {isAdding ? "Adding..." : "Add Blog"}
         </button>
       </form>
     </div>

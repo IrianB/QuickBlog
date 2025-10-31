@@ -2,12 +2,21 @@ import React from 'react'
 import { assets } from '../../assets/assets'
 import { Outlet, useNavigate } from 'react-router-dom'
 import Sidebar from '../../components/admin/Sidebar'
+import { useAppContext } from '../../context/AppContext'
 
 const Layout = () => {
     const navigate = useNavigate()
+    const { setToken, axios } = useAppContext()
 
     const logout = () => {
+        // Clear all authentication data
+        localStorage.removeItem('token')
+        setToken(null)
+        delete axios.defaults.headers.common['Authorization']
+        
+        // Redirect to homepage
         navigate('/')
+        window.location.reload()
     }
 
     return (
@@ -37,15 +46,14 @@ const Layout = () => {
             </header>
 
             <div className="flex flex-1">
-                {/* Sidebar on the left */}
+                {/* Sidebar */}
                 <Sidebar />
 
-                {/* Main content */}
+                {/* Main Content */}
                 <main className="flex-1 p-6">
                     <Outlet />
                 </main>
             </div>
-
         </div>
     )
 }

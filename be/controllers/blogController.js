@@ -68,7 +68,7 @@ export const deleteBlogsById = async (req, res) => {
   const { id } = req.body
   try {
     await Blog.findByIdAndDelete(id)
-    await Comment.deleteMany({blog: id})
+    await Comment.deleteMany({ blog: id })
     res.json({ success: true, message: 'Blog and Comment successfully deleted' })
   } catch (error) {
     res.json({ success: false, message: error.message })
@@ -76,33 +76,49 @@ export const deleteBlogsById = async (req, res) => {
 }
 
 export const togglePublish = async (req, res) => {
-  const { id } = req.body
+  const { id } = req.body;
   try {
-    const blog = await Blog.findById(id)
-    blog.isPublished = !blog.isPublished
-    await blog.save()
-    res.json({ success: true, message: 'status updated' })
+    const blog = await Blog.findById(id);
+
+    if (!blog) {
+      return res.status(404).json({ success: false, message: 'Blog not found' });
+    }
+
+    blog.isPublished = !blog.isPublished;
+    await blog.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Blog ${blog.isPublished ? 'published' : 'unpublished'} successfully`
+    });
   } catch (error) {
-    res.json({ success: false, message: error.message })
+    console.error('Toggle publish error:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
-}
+};
+
+
+
 
 export const addComment = async (req, res) => {
   const { blog, name, content } = req.body
   try {
-    await Comment.create({blog, name, content})
-    res.json({ success: true, message: 'Comment added for review' })
+    await Comment.create({ blog, name, content })
+    return res.status(201).json({ success: true, message: 'Comment added for review' })
   } catch (error) {
-    res.json({ success: false, message: error.message })
+    console.error('Error adding comment:', error)
+    return res.status(500).json({ success: false, message: error.message })
   }
 }
+
 
 export const getAllBlogsComment = async (req, res) => {
   try {
     const { blogId } = req.body;
     const comment = await Comment.find({ blog: blogId, isApproved: true })
-      .sort({ createdAt: -1 }); 
-    res.json({success: true, comments: comment})
+      .sort({ createdAt: -1 });
+    res.json({ success: true, comments: comment })
+
   } catch (error) {
     res.json({ success: false, message: error.message });
   }

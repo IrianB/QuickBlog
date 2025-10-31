@@ -1,19 +1,30 @@
-import React, { useEffect, useState } from 'react'
-import { blog_data } from '../../assets/assets'
-import BlogTableItem from '../../components/admin/BlogTableItem'
-
+import React, { useEffect, useState } from "react";
+import BlogTableItem from "../../components/admin/BlogTableItem";
+import { useAppContext } from "../../context/AppContext";
+import toast from "react-hot-toast";
 
 const ListBlog = () => {
+  const [blogs, setBlogs] = useState([]);
+  const { axios } = useAppContext();
 
-  const [blogs, setBlogs] = useState([])
-
+  // Fetch all blogs from backend
   const fetchBlogs = async () => {
-    setBlogs(blog_data)
-  }
+    try {
+      const { data } = await axios.get("/api/admin/blogs");
+      if (data.success) {
+        setBlogs(data.blogs);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch blogs");
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    fetchBlogs()
-  }, [])
+    fetchBlogs();
+  }, []);
 
   return (
     <div>
@@ -35,22 +46,28 @@ const ListBlog = () => {
             </thead>
 
             <tbody>
-              {blogs.map((blog, index) => (
-                <BlogTableItem
-                  key={blog._id}
-                  blog={blog}
-                  fetchBlog={fetchBlogs}
-                  index={index}
-                />
-              ))}
+              {blogs.length > 0 ? (
+                blogs.map((blog, index) => (
+                  <BlogTableItem
+                    key={blog._id}
+                    blog={blog}
+                    fetchBlogs={fetchBlogs}
+                    index={index}
+                  />
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center py-6 text-gray-500 font-medium">
+                    No blogs found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       </div>
-
-
     </div>
-  )
-}
+  );
+};
 
-export default ListBlog
+export default ListBlog;
