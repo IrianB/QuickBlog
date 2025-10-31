@@ -1,12 +1,30 @@
 import React, { useState } from 'react'
+import { useAppContext } from '../../context/AppContext'
+import toast from 'react-hot-toast'
 
 const Login = () => {
+
+    const { axios, setToken } = useAppContext()
+
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        try {
+            const { data } = await axios.post('/api/admin/login', { email, password })
+            if (data.success) {
+                setToken(data.token)
+                localStorage.setItem('token', data.token)
+                axios.defaults.headers.common['Authorization'] = data.token
+            }
+            else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
     }
 
     return (
@@ -25,7 +43,7 @@ const Login = () => {
                 <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="relative z-0 w-full mb-6 group">
                         <input
-                            onChange={(e)=> setEmail(e.target.value)} value={email}
+                            onChange={(e) => setEmail(e.target.value)} value={email}
                             type="email"
                             name="email"
                             required
@@ -40,7 +58,7 @@ const Login = () => {
 
                     <div className="relative z-0 w-full mb-6 group">
                         <input
-                            onChange={(e)=> setPassword(e.target.value)} value={password}
+                            onChange={(e) => setPassword(e.target.value)} value={password}
                             type="password"
                             name="password"
                             required

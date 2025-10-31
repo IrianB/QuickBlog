@@ -2,8 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { assets, blogCategories } from "../../assets/assets";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
+import { useAppContext } from "../../context/AppContext";
+import toast from "react-hot-toast";
 
 const AddBlog = () => {
+
+  const { axios } = useAppContext()
+  const [isAdding, setisAdding] = useState(false)
+
   const editorRef = useRef(null);
   const quillRef = useRef(null);
 
@@ -17,12 +23,45 @@ const AddBlog = () => {
     // Future AI integration
   };
 
-  const isPublished = async () => {
-    // Handle publish logic
+  const handlePublish = () => {
+    setPublish(true);
+    toast.success("Blog will be published on submission");
   };
 
   const submitHandler = async (e) => {
-    e.preventDefault();
+
+    try {
+      e.preventDefault();
+      setisAdding(true)
+
+      const blog = {
+        title,
+        subTitle,
+        description: quillRef.current.root.innerHTML,
+        category,
+        isPublished: publish,
+      };
+
+      const formData = new FormData()
+      formData.append('blog', JSON.stringify(blog))
+      formData.append('image', image)
+
+      const { data } = await axios.post('/api/blog/add', formData)
+
+      if (data.success) {
+        toast.success(data.message)
+        setImage(false)
+        setTitle('')
+        quillRef.current.root.innerHTML = ''
+        setCategory('Startup')
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    } finally {
+      setisAdding(false)
+    }
   };
 
   useEffect(() => {
@@ -140,7 +179,7 @@ const AddBlog = () => {
         {/* Publish Checkbox */}
         <div className="flex items-center gap-3">
           <input
-            onChange={(e) => setPublish(e.target.checked)}
+            onChange={(e) => handlePublish(e.target.checked)}
             type="checkbox"
             checked={publish}
             id="publish"
@@ -153,10 +192,11 @@ const AddBlog = () => {
 
         {/* Submit Button */}
         <button
+          disabled={isAdding}
           type="submit"
           className="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow transition"
         >
-          Add Blog
+          {isAdding ? 'Adding...' : 'Add Blog'}
         </button>
       </form>
     </div>

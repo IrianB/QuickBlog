@@ -1,13 +1,28 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { assets } from '../assets/assets'
+import { useAppContext } from '../context/AppContext'
 
 const Header = () => {
+  const { setInput, input } = useAppContext()
+  const inputRef = useRef()
+
+  const submitHandler = (e) => {
+    e.preventDefault()
+    setInput(inputRef.current.value)
+  }
+
+  const clearSearch = () => {
+    setInput('')
+    if (inputRef.current) inputRef.current.value = ''
+  }
+
   return (
     <div
       className="relative w-full flex flex-col items-center justify-center text-center overflow-hidden px-4 py-20 bg-cover bg-center"
       style={{ backgroundImage: `url(${assets.gradientBackground})` }}
     >
       <div className="absolute inset-0 bg-black/20"></div>
+
       <div className="relative z-10 flex flex-col items-center max-w-3xl w-full">
         <div className="flex items-center gap-2 bg-white/80 text-gray-800 px-6 py-2 rounded-full mt-8 shadow-sm cursor-pointer hover:bg-white/90 transition">
           <img src={assets.star_icon} alt="star" className="w-4 h-4" />
@@ -25,8 +40,10 @@ const Header = () => {
           Share what matters, and write without filters. One word or a thousand, your story starts here.
         </p>
 
-        <form className="mt-6 flex w-full max-w-md">
+        {/* Search Form */}
+        <form onSubmit={submitHandler} className="mt-6 flex w-full max-w-md">
           <input
+            ref={inputRef}
             type="text"
             placeholder="Search for blogs"
             required
@@ -39,6 +56,16 @@ const Header = () => {
             Search
           </button>
         </form>
+
+        
+        {input && (
+          <button
+            onClick={clearSearch}
+            className="mt-4 px-5 py-2 text-sm font-medium text-white bg-gradient-to-r from-gray-500 to-gray-700 rounded-full shadow-md hover:from-gray-600 hover:to-gray-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
+          >
+            Clear Search
+          </button>
+        )}
       </div>
     </div>
   )

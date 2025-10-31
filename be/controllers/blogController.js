@@ -47,8 +47,8 @@ export const addBlog = async (req, res) => {
 
 export const getAllBlogs = async (req, res) => {
   try {
-    const blog = await Blog.find({ isPublished: true })
-    res.json({ success: true, blog })
+    const blogs = await Blog.find({ isPublished: true })
+    res.json({ success: true, blogs })
   } catch (error) {
     res.json({ success: false, message: error.message })
   }
@@ -97,12 +97,13 @@ export const addComment = async (req, res) => {
   }
 }
 
-export const getAllBlogsComment = async(req, res) => {
+export const getAllBlogsComment = async (req, res) => {
   try {
-    const { blogId } = req.body
-    const comment = (await Comment.find({blog: blogId, isApproved: true})).toSorted({createadAt: -1})
-    res.json({success: true, comment})
+    const { blogId } = req.body;
+    const comment = await Comment.find({ blog: blogId, isApproved: true })
+      .sort({ createdAt: -1 }); 
+    res.json({success: true, comments: comment})
   } catch (error) {
-    res.json({ success: false, message: error.message })
+    res.json({ success: false, message: error.message });
   }
-}
+};
